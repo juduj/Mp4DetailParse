@@ -1,4 +1,4 @@
-# Mp4DetailParse
+# Mp4DetailsParse
 
 # NOT FOR USE
 This is just practice!
