@@ -72,19 +72,21 @@ bool ReadBoxData()
 
     std::cout << "Finding Brands! " << std::endl;
     std::cout << std::endl;
+
     if (!FindBrands(bufferString))
     {
         err.what = "Could not find Major Brand Version!";
         return false;
     }
-    std::cout << "Done finding brands!" << std::endl;
-    std::cout << std::endl;
 
     std::cout << "Box Details: " << std::endl;
     std::cout << "Box Name: " << box.name << std::endl;
     std::cout << "Major Brand Version: " << FileTypeBox.majorBrand << std::endl;
     std::cout << "Minor Brand Version: " << FileTypeBox.minorVersion << std::endl;
     std::cout << "Compatible Brands: " << FileTypeBox.compatibleBrands << std::endl;
+
+    std::cout << std::endl;
+    std::cout << "Done finding brands!" << std::endl;
 
     std::cout << std::endl;
 
@@ -116,15 +118,19 @@ bool FindBrands(std::string buffer)
     // Read bytes from specific positions
     std::string name(data + 4, 4);   // Read 4 bytes starting from position 4 (ftyp)
     std::string major(data + 8, 4);   // Read 4 bytes starting from position 8 (isom)
-    
+
+    uint32_t minVer = 0;
+    minVer |= (data[12]) << 24;
+    minVer |= (data[12 + 1]) << 16;
+    minVer |= (data[12 + 2]) << 8;
+    minVer |= (data[12 + 3]);
+
+    std::string brands(data + 12, (32 - 12));
+
+
     box.name = name;
-
     FileTypeBox.majorBrand = major;
-    FileTypeBox.minorVersion = 0; // Until I find a fix for whitespace
-
-    //holy sigma!
-    std::string brands(data + 12, (32-12));
-
+    FileTypeBox.minorVersion = minVer;
     FileTypeBox.compatibleBrands = brands;
 
 
